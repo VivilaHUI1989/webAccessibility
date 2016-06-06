@@ -1,0 +1,209 @@
+﻿1.在html元素上使用语言属性
+该技巧的目的是标识文档的默认语言，通过在html元素中提供lang或xml：lang属性。
+因为以下原因，标识文档的语言很重要：
+1）它允许盲人翻译软件来代替变音字符的控制码，并插入必要的代码来防止二级盲文收缩的错误产生；
+2）支持多语言的语音合成将会定向适配网页指定语言的发音和语言，使用正确的发音读出文本。
+3）标记语言可以得益于未来的技术法阵，例如，不能在自主翻译语言的用户可以使用机器翻译不熟悉的语言。
+4）标记语言可以帮助用户代理提供字典解释。
+html4.01使用html元素的lang属性。XHTML作为text/html使用html元素的lang属性和xml：lang属性，为了满足XTHML的需求，并且向后兼容HTML。XHTML使用html元素的xml：lang属性服务应用或html+xml。lang属性和xml:lang属性只能有一个值。
+注1：HTML只提供使用lang属性，XHTML1.0允许两个属性，而且XHTML1.1只允许xml：lang属性。
+注2：lang和xml：lang属性允许的值在资源文件中列出。语言标签使用优先编码来标明语言，可选子集编码（使用连字符区别）来指明语言的变种。例如，英语的优先编码为“en”，英国英语和美国英语可以使用"en-GB"和"en-US"来区分。在该技巧中，使用优先编码是很重要的。子集编码的使用是可选的，但是在某些情景下是有帮助的。
+样例1：该样例定义一个html文档的法语内容。
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="fr"> 
+<head>
+  <title>document écrit en français</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>  
+<body>     
+	...document écrit en français...   
+</body>
+</html> 
+样例2：该样例定义了一个内容类型text/html为法语的XHTML1.0文档。lang属性和xml：lang属性都被指定来满足xhtml的需求，和提供html的向后兼容。
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+  <title>document écrit en français</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+</head>
+<body> 
+...document écrit en français...      
+</body>
+</html> 
+样例3：该XHTML1.0文档只使用xml：lang属性；
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+<head>
+  <title>document écrit en français</title>
+	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+</head>
+<body> 
+	...document écrit en français... 
+</body>
+</html>
+样例4:使用语言属性来标识人类语言的改变
+该技巧的目的是清楚的标明一个网页中语言的变化，通过使用lang或者xml：lang属性。该样例使用xml：lang属性定义一个德文引用。
+<blockquote xml:lang="de">
+  <p>
+    Da dachte der Herr daran, ihn aus dem Futter zu schaffen,
+    aber der Esel merkte, daß kein guter Wind wehte, lief fort
+    und machte sich auf den Weg nach Bremen: dort, meinte er,
+    könnte er ja Stadtmusikant werden.
+  </p>
+</blockquote>   
+
+
+2.为异常或限制方式使用词汇或短语提供定义
+该技巧的目的是为那些异常使用或限制方式使用的任何词汇提供定义。
+异常或限制方式使用的词汇，是当：
+1）词典给出了词汇的几个定义，但是使用的是特定含义才能理解内容；
+2）使用特定含义才能理解内容，且字典列表中该定义是罕见的、陈旧的、过时的等等；
+3）开发者创建新的含义,必须用来理解内容；
+该技巧也可以用来为行话提供定义，也就是说，用在特定行业或技术领域的特定词汇，能够被该领域的人群理解，却不能被其他领域的人理解。
+该技巧也被用来定义惯用的表达。例如，一个语言的讲述人，生活在特定的区域，可能会使用被该地区人群普遍接受的惯用表达，但是却不能被其他地域的相同语言的人群所接受。
+样例1：限制方式使用的词汇
+词汇“技术”被广泛的用来覆盖从早期人类使用的时期工具到现代电子设备例如手机的所有东西。但是在WCAG2.0中，“技术”在一个更限制的方式使用：它表示一种将会渲染的编码结构机制，被用户代理呈现或执行，包含标记语言、数据格式和用来生成和传递web内容的程序语言。
+样例2：根据过时定义使用词汇
+词汇“ether”被定义为一种填充空隙的物质：“他相信声音通过“ather”传播”。
+样例3：行话
+词汇“driver”被定义为打印机包含特定说明的软件：“可能需要更新您打印机的driver”；
+样例4：一个惯用表达
+一些人表达“reveal a secret”时习惯说“spill the beans”，例如，在警察局，Joe说漏嘴，讲出了杀害总理的罪行；
+样例5：日语的习惯表达
+该例子使用括号来提供惯用语的定义。在日语中，该词汇是说“他扔了勺子”。意思是他没有事情可以做，最后放弃了；さじを投げる（どうすることもできなくなり、あきらめること）。
+样例6：不熟悉的外来语
+用户可能不明白从其他语言舶来的词汇：“拜拜”“沙发”“马杀鸡”
+
+3.链接到定义
+该技巧的目的是为词汇、短语或者缩写提供定义，可以在同一页面内或不同页面内，并且建立一个条目与定义的链接。
+链接是个有力的选择，为词汇、短语或缩写提供可访问定义。一个用户可以使用链接快速简单的找到定义，然后使用用户代理返回功能回到原来的位置继续阅读。
+样例1：
+文章里关于运动损伤的条目和缩写被链接到医学词典里的定义。
+样例2：
+一本教科书包含一个每个章节引入的新词汇表。这些词汇的第一次出现被链接到词汇表里的定义。
+样例3：
+提供缩写的常规词汇表。所有缩写的出现被直接链接到词汇表的合适定义。
+样例4：
+词汇“jargon”被链接到WCAG2词汇表定义。
+<em>
+<a class="gl-ref" href="http://www.w3.org/TR/2008/REC-WCAG20-20081211/#jargondef">jargon</a></em>
+样例5：
+modulo在web内容中是个有关数学的属于。modulo的定义被包含在网页中。每一次modulo的出现都会被链接到该定义。
+样例6：
+一个日本成语链接到它的定义。该样例使用页面内链接，导航到成语表达的定义。
+ <p>...<a href="#definition">さじを投げる</a>...</p>
+                <h3>脚注：</h3>
+                <dl>
+                <dt id="definition" name="definition">さじを投げる</dt>
+                <dd>どうすることもできなくなり、あきらめること。</dd>
+                </dl>
+
+4.使用定义列表
+该技巧的目的是通过在定义列表呈现来提供词汇或短语的定义。该列表使用dl元素标记。在列表中，每个条目被放在dt元素中，它的定义被放置在后面的dd元素中。title属性可以被用来提供定义列表的附加信息。
+使用dl、dt、dd来保证词汇和定义之间的关系被保留，词汇和定义列表被看做一个组合。
+当定义列表使用字母排序，定义列表使用最简单。定义列表列表一般用在词汇表中。
+样例1：
+一个航行网站上有关航行术语的定义列表。
+<dl title="Nautical terms">
+  <dt>Knot</dt>
+  <dd>
+    <p>A <em>knot</em> is a unit of speed equaling 1 
+      nautical mile per hour (1.15 miles per hour or 1.852 
+      kilometers per hour).</p>
+  </dd>
+  <dt>Port</dt>
+  <dd>
+    <p><em>Port</em> is the nautical term (used on 
+      boats and ships) that refers to the left side
+      of a ship, as perceived by a person facing towards 
+      the bow (the front of the vessel).</p>
+  </dd>
+  <dt>Starboard</dt>
+  <dd>
+    <p><em>Starboard</em> is the nautical term (used 
+      on boats and ships) that refers to the right 
+      side of a vessel, as perceived by a person 
+      facing towards the bow (the front of the vessel).</p>
+  </dd>
+</dl> 
+
+5.使用link元素链接到词汇表
+该技巧的目的是为定位词汇表提供机制。当内容中的属于被定义在不同的词汇页面，在head元素中使用link元素参考词汇表。link元素的rel属性被设置为词汇（glossary），href属性包含词汇页面的URI。用户代理可以帮助快速简单的访问词汇表。
+样例1：WCAG2.0词汇表
+ <link rel="glossary" href="http://www.w3.org/TR/WCAG20/#glossary">
+
+6.使用行内定义
+该技巧的目的是为所有异常限制使用的词汇在上下文中提供定义。定义被提供在文本中，或者在词汇前，或者在词汇后。定义可能包含同一句子中，或在不同句子中。
+样例1：物质
+他相信声音通过物质传播，这些物质可能被填充在空隙区域。
+样例2：驱动
+需要去更新打印机的驱动（驱动是包含打印机特定说明的软件）。
+样例3：W3C关键词
+定义：关键词汇必须、必须不、必填、应、应不、应该、应该不、建议、可能和可选被翻译在<a href="http://www.faqs.org/rfcs/rfc2119.html">RFC 2119</a>
+样例4：在上下文中定义一个日本成语表达
+该样例使用括号在日语中提供成语的定义。在日语中该短语说的是“他扔了勺子”，意思是他什么都不能做，所以最后放弃了。
+さじを投げる（どうすることもできなくなり、あきらめること）。
+
+7.使用dfn元素标识一个单词的定义样例
+该技巧的目的是使用dfn来标识包含定义的词汇或短语。dfn元素被用来标明被定义的闭合词组。换句话说，它标记词汇的出现。注意它包含词汇，不是定义。该技巧需要与“使用行内定义”配合使用。
+样例1：下面的代码展示了dfn元素的使用。
+<p>The Web Content Accessibility Guidelines require that non-text content
+has a text alternative. <dfn>Non-text content</dfn> is content that is not a sequence
+of characters that can be programmatically determined or where the sequence is
+not expressing something in human language; this includes ASCII Art (which is a
+pattern of characters), emoticons, leetspeak (which is character substitution), and
+images representing text .</p> 
+
+8.为缩写提供扩展或解释
+该技巧的目的是为理解缩写提供必要的信息。
+缩写是词汇、短语或明晰的简短模式。对大多数缩写来说，需要提供完整的词汇、短语或名字。
+一些缩写呈现的词汇或短语是来自外语。例如，英语中使用很多缩写来自拉丁短语，例如下表。词汇提供的展开模式是背景信息。对于该类缩写词，提供解释比提供原始展开模式有用，缩略词的解释代替展开模式被提供。
+Abbreviation
+Latin expansion
+Explanation
+
+a.m. ante meridiem   before noon;  in the morning 
+p.m. post meridiem   after noon; in the afternoon 
+e.g. exempli gratia    for example 
+cf  confer/conferatur    compare 
+如果缩略词不需要展开模式（例如，因为原始展开模式被指向的组合所否认，或者缩写已经成为语言的一部分），提供适当的世界，或者当缩略词看做一个不需要解释的词汇。
+样例1：ADA
+一些缩略词有超过一个的含义，且意义依赖上下文。例如，在一个上下文中，ADA表示“American Dental Association”，在另一个上下文中，表示“Americans with Disabilities Act”。只有与上下文有关的扩展需要被提供。
+样例2：来自拉丁短语的英语缩写
+e.g.代表例如：Students participating in team sports, e.g., basketball or football, must set their schedules around team practice time.
+样例3:ABS
+包含英语和荷兰语在内的一些语言从德语中引用ABS（Antiblockiersystem: anti-lock brakes）。需要提供解释而不是展开模式。
+样例4：没有展开模式的缩略侧
+一些词不再有展开模式，包含：SIL，曾用来标识语言学暑期学院，现在标识自己右边的一个名字，如“<a href="http://www.sil.org/sil/history.htm">SIL history</a>”；IMS，曾用来表示教学管理系统，现在用来独立使用。对于这个样例的目录，需要一个简短的解释告知是哪个组织。
+样例5：曾经是缩略词，现在变为语言的一部分
+英语短语o'clock，曾是of the clock的缩写。现在已经变为英语的一个词汇，展开形式不再提供了。
+
+
+9.在展开模式之前或之后立即提供缩略词的第一次使用
+该技巧的目的是缩略词在网页中第一次出现时，将它的展开模式与之联系起来。任何缩略词的扩展都可搜索网页得到。
+对于英语，通过使用缩写，首字母缩略词，首字母缩写，或其他缩短形式简写词汇、短语或姓名时，建议在使用缩略词之前提供展开模式。这让文本更容易阅读，且建议使用多种样式指导。其他语言可能有不同的传统。
+注意一些缩略词需要的是解释而不是展开模式。该技巧不适合这样的缩略词。
+该技巧适用于网页中第一次出现的缩略词。当很多资源合并到一个资源，缩略词将会在每个资源开端展开。在这种情境下，但是，使用不同技巧提供展开可能更合适。
+样例1：
+"The United Nations High Commissioner for Human Rights (UNHCR) was established in 1950 to provide protection and assistance to refugees."
+"The WAI (Web Accessibility Initiative) demonstrates the W3C commitment to accessibility."
+
+10.使用abbr元素为缩略词提供定义
+该技巧的目的是使用abbr元素为缩略词提供展开或定义。
+对任何缩略词来说使用abbr元素都是合适的，包含首字母缩写。当使用HTML和XHTML时，缩略词可能使用acronym元素标记。HTML4以后的版本删除了acronym元素，使用abbr元素来代替。
+样例1：使用abbr元素展开缩略词
+<p>Sugar is commonly sold in 5 <abbr title="pound">lb.</abbr> bags.</p>
+<p>Welcome to the <abbr title="World Wide Web">WWW</abbr>!</p> 
+样例2：使用abbr元素定义缩略词
+<p>Tasini <abbr title="and others">et al.</abbr> <abbr title="versus">v.</abbr>
+The New York Times <abbr title="and others">et al.</abbr> is the landmark lawsuit 
+brought by members of the National Writers Union against ......</p>  
+样例3：使用abbr元素展开缩略词
+<p>The use of <abbr title="Keep It Simple Stupid">KISS</abbr> became popular in ...</p> 
+样例4：使用abbr展开首字母缩略词
+<p><abbr title="World Wide Web">WWW</abbr></p>
+
+
+

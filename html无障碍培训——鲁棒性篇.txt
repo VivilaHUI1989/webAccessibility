@@ -1,0 +1,170 @@
+7.鲁棒性--内容必须健壮到可信地被种类繁多的用户代理(包括辅助技术)所解释。
+7.1兼容：最大化兼容当前和未来的用户代理(包括辅助技术)。
+1）解析:使用标记语言实现的内容，元素要有完整的开始和结束标签，元素根据其规格进行嵌套，元素不包含重复的属性，任何ID都是唯一的，除非规范允许这些特性。 （A级）
+注: 缺少关键特性的开始和结束标签是不完整的，比如一个右尖括号或不匹配的属性值引用标记。
+7.2名称，角色，值:对于所有用户界面组件（包括但不限于：表单元素，链接和由脚本生成的组件），名称和角色可以编程式确定; 可由用户设置的状态、属性和值可以编程式设置，这些变化通知对用户代理（包括辅助技术）有效。 （A级）
+注: 此成功标准主要用于Web作者开发或编写自己的用户界面组件。比如根据规范使用标准HTML控件时，标准HTML控件已经满足这一成功标准。
+这个标准是为了确保辅助技术可以收集活跃控件的信息，并不断跟踪用户界面控件的状态变化。
+1)在可见label不能使用的时候，使用aria-label提供不可见标签；
+对于视觉用户，一个元素的上下文和视觉呈现可以提供足够的信息来 判定该元素的目的。比如，弹出窗口右上角的叉号表明这个控件可以关闭这个窗口；
+在某些情况下，当可见的label不能使用是，可根据选择的设计方法，或者通过视觉和上下文来呈现的目的，可以提供aria-label属性来提供name。
+在另外的情况，元素可以使用aria-label来提供可获得的name，当html标准标签元素不支持控件的时候，例如：将div设置为contentEditable（可编辑），而不是使用标准表单元素例如使用type=text的输入元素或者文本域来提供丰富的文本编辑经验。
+样例1：弹出框的叉号按钮
+<div id="box">这里有一个弹出框
+   <button aria-label="Close" onclick="document.getElementById('box').style.display='none';" class="close-button">X（叉号）</button>			
+</div>
+样例2：多区域电话号码
+<div role="group" aria-labelledby="groupLabel">
+  <span id="groupLabel>工作电话</span>
+  +<input type="number" aria-label="国家代码">
+  <input type="number" aria-label="地区代码">
+  <input type="number" aria-label="详细号码">
+</div>
+2）使用aria-labelledby为用户界面控件提供name
+这个技巧用来为用户界面控件提供name，这些name可以被辅助技术阅读。WAI-ARIA使用aria-labelledby将文本与章节、设计、表单元素、图片等联系起来。这个技巧使用aria-labelledby属性连接用户界面控件，例如表单区域；
+aria-labelledby可以接受很多id来指向其他网页上的其他元素，使用分隔列表。这个能力将aria-labelledby变得格外有用，在视觉用户使用周围的文字来判定控件目的的时候。使用aria-labelledby可以串联多个文本节点到label，这个文本节点包含状态的样例，这些状态来自其他的网页上的其他文本元素；
+即使aria-labelledby的功能与标准html控件类似，仍有些不同：
+aria-labelledby可以引用多个文本元素，label只能引用一个；
+aria-labelledby可以被应用到多种元素，label元素只能用于表单元素；
+点击label焦点自动链接到表单元素，这个不会发生在aria-labelledby。这个行为只有在使用label或者使用JS脚本的时候才会发生。
+注：在老版本的浏览器和辅助技术里面，label比aria-labelledby支持的好；
+样例1：标记简单文本区域：使用aria-labelledby为简单文本区域提供标签，当没有文本可用来描述，但是在网页上有其他文本可用来精确标记控件;
+<input name="searchtxt" type="text" aria-labelledby="searchbtn">
+<input name="searchbtn" id="searchbtn" type="submit" value="Search">
+样例2：标记滑块：使用aria-labelledby为滑块控件提供label，它的标记信息来自临近的文本。
+<p><span id="mysldr-lbl">请选择旅行时间</span></p>
+<div id="mysldr" role="slider" aria-labelledby="mysldr-lbl"></div>
+样例3：来自多个文本的label
+<label id="l1" for="f3">通知我</label>
+<select name="amt" id="f3" aria-labelledby="l1 f3 l2">
+  <option value="1">1</option>
+  <option value="2">2</option>
+</select>
+<span id="l2" tabindex="-1">提前多少天</span>
+3）使用标记功能暴露出元素的名称和角色，允许用户直接更改的属性可以直接设置，并提供更改通知。
+3.1使用html控件和链接；
+3.2使用label元素连接文本label和表单控件；
+3.3使用框架和内置框架的title的属性；
+3.4当label不能使用的时候使用title属性来识别表单元素；
+4）使用wai-aria角色来暴露用户界面元素
+使用这个技巧可以定义一个元素的角色，角色role的属性值是wai-aria定义的非抽象值。wai-aria说明文档为每一个角色提供了描述信息，怎样连接其他元素，每个角色的状态和属性。当丰富互联网应用定义新的用户界面小程序，暴露出的role可以让用户更好的理解小程序并与之交互；
+样例1：一个简单的工具条
+wai-aria开发实践文档定义包含三个按钮的工具条。div有一个toolbar属性，图片元素有一个button属性。
+关键代码：
+<div role="toolbar" 略去部分属性>
+<img src="img/btn1.gif"  role="button" 略去部分属性>
+全部代码：
+ <div role="toolbar"
+      tabindex="0" 
+      id="customToolbar" 
+      onkeydown="return optionKeyEvent(event);"
+      onkeypress="return optionKeyEvent(event);"
+      onclick="return optionClickEvent(event);"
+      onblur="hideFocus()"
+      onfocus="showFocus()"
+      > 
+      <img src="img/btn1.gif" 
+           role="button" 
+           tabindex="-1" 
+           alt="Home" 
+           id="b1" 
+           title="Home">
+      <img src="img/btn2.gif" 
+           role="button" 
+           tabindex="-1" 
+           alt="Refresh" 
+           id="b2" 
+           title="Refresh">
+     <img src="img/btn3.gif" 
+           role="button" 
+           tabindex="-1" 
+           alt="Help" 
+           id="b3" 
+           title="Help"> 
+ </div>  
+样例2：树形应用
+tree、treeitem、group的role值用来辨别树和它的结构。
+role="tree"表示树形
+role="treeitem"表示树结构选项
+role="group"表示组合并
+关键代码：
+<ul role="tree" tabindex="0">
+  <li role="treeitem">鸟类</li>
+  <li role="treeitem">猫
+    <ul role="group">
+全部代码：
+<ul role="tree" tabindex="0">
+  <li role="treeitem">鸟类</li>
+  <li role="treeitem">猫
+    <ul role="group">
+      <li role="treeitem">暹罗</li>
+      <li role="treeitem">斑猫</li>
+    </ul>
+  </li>
+  <li role="treeitem">狗
+    <ul role="group">
+      <li role="treeitem">小型犬
+        <ul role="group">
+          <li role="treeitem">吉娃娃</li>
+          <li role="treeitem">意大利灰狗</li>
+          <li role="treeitem">日本展</li>
+        </ul>
+      </li>
+      <li role="treeitem"">中期品种
+        <ul role="group">
+          <li role="treeitem">小猎犬</li>
+          <li role="treeitem">可卡犬</li>
+          <li role="treeitem">斗牛犬</li>
+        </ul>
+      </li>
+      <li role="treeitem">大品种
+        <ul role="group">
+          <li role="treeitem">阿富汗</li>
+          <li role="treeitem">大丹犬</li>
+          <li role="treeitem">獒</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+5）使用wai-aria状态和属性来暴露用户界面元素的状态
+这个技巧使用来暴露用户界面元素的状态属性和值，这样就可以被辅助技术读取和设置，辅助技术也可以被告知这些值的改变。wai-aria说明提供每个属性和每个role的正式描述。当丰富互联网应用定义新的用户界面小程序，暴露出的role可以让用户更好的理解小程序并与之交互；
+样例1：切换按钮
+有role的值为button为小程序当有aira-pressed属性的时候可以作为切换按钮。当aria-pressed为真时，按钮在按下的状态。当aria-pressed为假时，未被按下。如果aria-pressed不存在时，按钮只是个简单的控制按钮。
+全部代码：
+<li id="bold1"  
+    class="toggleButton"
+    role="button"
+    tabindex="0"
+    aria-pressed="false"
+    aria-labelledby="bold_label"
+    aria-controls="text1">//此时列表只是个控制按钮
+    <img src="http://www.oaa-accessibility.org/media/examples/images/button-bold.png" alt="bold text" align="middle">
+</li>
+脚本程序：用来切换aria-pressed的true和false的状态；
+function togglePressed(id) {
+    // reverse the aria-pressed state
+    if ($(id).attr('aria-pressed') == 'true') {
+      $(id).attr('aria-pressed', 'false');
+    }
+    else {
+      $(id).attr('aria-pressed', 'true');
+    }
+  }
+样例2：滑块
+一个role为slider的小程序，允许用户在一个规定范围内选择一个值。滑块通过滑块的大小和位置来呈现的当前值和范围。这些滑块的属性通过aria-valuemin、aria-valuemax、aria-valuenow来呈现；
+以下为ajax无障碍样例，展示了使用js创建滑块。
+var handle = '<img 
+id="' + id + '" 
+class="' + (this.vert == true ? 'v':'h') +'sliderHandle"+'src="http://www.oaa-accessibility.org/media/examples/images/slider_' + (this.vert == true ? 'v':'h') + '.png" ' + 'role="slider"' +'aria-valuemin="' + this.min +'" 'aria-valuemax="' + this.max +'" 
+aria-valuenow="' + (val == undefined ? this.min : val) +'" 
+aria-labelledby="' + label +'" 
+aria-controls="' + controls + '" 
+tabindex="0"></img>';
+以下通过JS刷新aria-valuenow属性
+slider.prototype.positionHandle = function($handle, val) {
+    此处省略部分代码
+   // 设置aria-valuenow的滑动位置
+  $handle.attr('aria-valuenow', val);
+   此处省略部分代码
+  }

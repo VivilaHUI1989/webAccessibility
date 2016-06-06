@@ -1,0 +1,459 @@
+一、flash焦点陷入问题
+二、保证键盘用户不会陷入子集出不来
+三、landmark
+四、为网页添加标题：简单描述该网页内容
+五、可以使用tabindex属性为元素添加tab顺序
+六、使用设备独立的方式来新建传统窗口
+七、使用链接作为导航工具
+八、焦点可见：键盘用户操作时焦点可见
+九、用户在浏览一系列网页时，当前网页的位置信息应该可以获得。
+十、章节开始前为章节提供标题元素：
+十一、标题和标签: 标题和标签说明主题或目的。
+十二、创建一种机制跳过一堆界面相同的部分，直接到达主内容
+十三、为链接提供目的文本
+
+一、flash键盘可访问且避免焦点陷阱
+这个技巧允许键盘焦点进入和移出嵌入网页中的flash内容。包括IE在内的浏览器，在嵌入flash内容的键盘无障碍存在一个问题，这个问题是，即使是flash内容和flash周围的html内容都是键盘可得的，但是很多浏览器不支持键盘焦点在flash内容和html之间移动，而不使用鼠标。一旦焦点进入flash内部，键盘使用者就会陷入到里面。相似的，当焦点在html内容的某个位置，焦点不可能回到html内容。这个技巧设计来让flash开发者处理这个问题，并为移出焦点提供支持。
+这个技巧有两个方法可使用：
+方法1：使用SWFFocus类为flash内容生成临近的可获得焦点的元素，在html tab顺序中。默认的，SWFFocus类将会在嵌入的flash内容的前后生成一个隐藏的链接。这两个链接被作为锚当tab出flash内容的时候将焦点移动到这两个链接。这个方法容易实现，不需要开发者的额外工作。但是隐藏的链接会扰乱html的tab顺序，因此，建议使用下面的方法；
+全部代码：
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en"（语言为英文） xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>键盘陷入修复样例</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <script src="swfobject_2_1.js" type="text/javascript"/>
+    <script type="text/javascript">
+      var flashvars = {};
+      var params = {};
+      params.scale = "noscale";
+      var attributes = {};
+      attributes.id = "FlashSample1SWF";
+      attributes.name = "FlashSample1SWF";
+      swfobject.embedSWF("keyboard_trap_fix_custom_as3.swf", "flashSample1", \ "150", "200", "9.0.0", "expressInstall.swf",flashvars, params, attributes);
+</script>
+  </head>
+  <body>
+    <p>下面的这个flash内容自动产生一个可以看到链接在flash内容的前后，允许键盘将焦点移出flash内容。</p>
+    <div id="flashSample1">
+      <a href="http://www.adobe.com/go/getflashplayer">
+        <img alt="获得flash播放器"
+src="图片地址http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif"/>
+      </a>
+    </div>
+  </body>
+</html>
+方法2：在html tab顺序中，在flash内容的之前和之后，明确定义可获焦点元素。
+
+使用这个方法，开发者使用ID值来识别html tab顺序中的flash内容前后的元素。这个可通过为flash内容<object>设置特殊的class名字来实现。这个方法很常用，因为这个方法不必引起tab顺序不必要的混乱。但是，这导致开发者更多的工作和无障碍意识。同时，在某些场景中，在flash内容的前后没有可获得焦点的元素。
+全部代码：
+<a href="http://www.lipsum.com/" id="focus1">test 1</a>
+<object class="swfPrev-focus1 swfNext-focus2"
+  data="keyboard_trap_fix_as3.swf" tabindex="0"
+  type="application/x-shockwave-flash"/>
+<a href="http://www.lipsum.com/" id="focus2">test 2</a>
+
+二、保证用户不会陷入内容陷阱
+保证键盘用户不会陷入子集出不来，这些子集仅在使用鼠标和点触设备时可用。最常见的是插件，如果插件可以获得焦点，但是没有提供可以跳出插件将焦点返回父窗口的机制，插件就会成为陷阱。
+使用以下机制可以有效避免该陷阱：
+1)事先定义好内容焦点（通常使用tabindex），当子集或插件导航到最后位置时，跳出子集或插件，事先定义好的焦点可以获得。
+2)定义键盘事件，将焦点移出子集内容。
+3)如果子集使用的技术里面包含回到父级的键盘命令，在用户进入该子集前提示用户该命令。
+样例1：一旦用户tab进入小程序，小程序会阻止焦点tab出去。但是，当用户将小程序内容的tab顺序tab完，小程序被设计将键盘焦点返回给父窗口。
+样例2：包含非无障碍内容的网页包含怎么样通过键盘将焦点移回无障碍内容的说明。说明应该在非无障碍内容的前面；
+样例3：在网页上可获得帮助信息不是非无障碍支持文件，帮助信息使用键盘可获得。
+样例4：帮助信息可用于网页文件，怎样将焦点通过键盘从非无障碍的内容转移到无障碍的内容，帮助信息可以通过键盘获得。
+四、为网页添加标题：简单描述该网页内容
+<head><title>互联网</title></head>
+五、可以使用tabindex属性为元素添加tab顺序，tabindex是个0-32767之间的数，当所有包含tabindex的元素遍历完后，开始遍历不包含的元素，顺序是出现在页面内的顺序。
+如果在页面的右上角有一个搜索框，它的tabindex为1，在加载页面时会优先获得焦点。
+如果几个控件的tabindex相同，他们的遍历顺序遵循内容顺序。
+插入新内容到DOM内，新内容的tab顺序是在触发新内容的控件后面。
+六、使用设备独立的方式来新建自定义窗口
+当用户想使用非悬浮的窗口，可以使用onclick事件弹出div的形式，该div覆盖在网页内容上，关闭时直接关闭div。
+无障碍要求：
+1)通过触发link或button控件的onclick事件来加载窗口。
+2)这个窗口的tab顺序紧跟在触发事件之后，该窗口可见。
+3)该窗口的HTML应该与其他内容有同样的无障碍标准.
+关键代码：<button onclick="TogglePopup(event,true)"name="pop0001">Options</button>
+全部代码：
+<button onclick="TogglePopup(event,true)"name="pop0001">Options</button>
+//onclick事件，弹出的div代码
+<div class="popover" id="pop0001">
+<h3>编辑顺序内容</h3>
+<form action="default.htm" onsubmit="this.parentNode.style.display='none'; return false;" onreset="this.parentNode.style.display='none'; return false;">
+<fieldset>
+<legend>搜索顺序</legend> 
+<input type="radio" name="order" id="order_alpha" />
+<label for="order_alpha">按字母排序</label>
+<input type="radio" name="order" id="order_default" checked="true" />
+<label for="order_default">默认</label>
+</fieldset>
+<div class="buttons">
+<input type="submit" value="OK" />
+<input type="reset" value="Cancel" />
+</div>
+</form>
+</div>
+七、使用链接作为导航工具：
+rel 属性 -- rel属性,描述了当前页面与href所指定文档的关系. rel是relationship的英文缩写. rel属性通常出现在a,link标签中 属性值 
+alternate -- 定义交替出现的链接 
+appendix -- 定义文档的附加信息 
+bookmark -- 书签 
+chapter 搜索-- 当前文档的章节
+contents copyright -- 当前文档的版权 
+glossary -- 词汇 
+help -- 链接帮助信息
+index -- 当前文档的索引 
+next -- 记录文档的下一页.(浏览器可以提前加载此页) 
+nofollow -- 不被用于计算
+PageRank prev -- 记录文档的上一页.(定义浏览器的后退键) 
+section -- 作为文档的一部分 start -- 通知搜索引擎,文档的开始 
+stylesheet -- 定义一个外部加载的样式表   
+subsection -- 作为文档的一小部分 
+rel与rev属性相同,它们都是属于LinkTypes属性.示例定义了梦之都的样式表,rel属性定义为stylesheet样式表,相关的文档为 http://hi.baidu.com/ovok/style.css.rel与rev的区别rel与rev具有互补的作用,rel指定了向前链接的关系,rev指定了反向链接的关系.猴子提示: nofollow非w3标准定义的rel属性值,此值为Google,MSN等搜索引擎定义.
+这个技巧的目的是去描述链接元素怎样提供元数据，这些元数据是关于在一堆网页中一个html网页的位置，或者可以包含一堆web网页的位置内容。rel属性的值表明描述内容的关系列别，href属性提供关系文件的链接。很多链接元素可以提供很多中关系。rel的很多值都很有用。
+link标签的rel有start、next、prev、contents、index几个值，start为一组有顺序的链接中开始的文件，next是当前链接的下一文件，prev是当前链接的上一文件，contents指向文件，index指向目录文件。
+<link rel="Contents" href="Contents.html（内容网址）" title="内容列表"  />
+<link rel="Index" href="Index.html（目录网址）" title="目录" />
+<link rel="Prev" href="Chapter01.html（上一章网址）" title="第一章" />
+<link rel="Next" href="Chapter03.html（下一章网址）" title="第三章" />
+八、焦点可见：键盘用户操作时焦点可见
+1)当界面元素获得焦点时突出显示；
+样例1：当html文本输入区域接收到焦点时，浏览器在文本输入区域显示闪烁的竖线；
+样例2：当html链接接收到焦点时，它们被聚焦亮点矩形包围；
+2)使用CSS改变控件获得焦点时的显示；
+样例1：链接元素
+html内容：
+<ul id="mainnav">
+  <li class="page_item">Home</li>
+  <li class="page_item"><a href="/services">Services</a></li>
+  <li class="page_item"><a href="/projects">Projects</a></li>
+  <li class="page_item"><a href="/demos">Demos</a></li>
+  <li class="page_item"><a href="/about-us">About us</a></li>
+  <li class="page_item"><a href="/contact-us">Contact us</a></li>
+  <li class="page_item"><a href="/links">Links</a></li>
+</ul>
+CSS代码:
+#mainnav a:hover, #mainnav a:active, #mainnav a:focus {
+  background-color: #DCFFFF;
+  color:#000066;
+}
+样例2：焦点元素高亮显示
+<html>
+  <head>
+    <style type="text/css">
+      input.text:focus {
+        background-color: #7FFF00; 
+        color: #000;
+      }
+      input[type=checkbox]:focus + label, input[type=radio]:focus + label {
+        background-color: #FF6; 
+        color: #000; 
+      }
+    </style>
+  </head>
+  <body>
+    <form method="post" action="form.php">
+      <p><label for="fname">Name: </label>
+        <input class="text" type="text" name="fname" id="fname" />
+      </p>
+      <p>
+        <input type="radio" name="sex" value="male" id="sm" /> <label for="sm">Male</label><br />
+        <input type="radio" name="sex" value="female" id="sf" /> <label for="sf">Female</label>
+      <p>
+    </form>
+  </body>
+</html>
+3)使用默认的焦点提示；
+样例1：Microsoft Windows默认的焦点显示是个1px的黑色虚线，在焦点元素的周围。一个黑色背景的网页，默认显示很难看到。网页的生成器使用默认的显示，用户可以自定义改变；
+样例2：
+在html中，表单元素和链接可以默认聚焦。此外，任何具有tabindex且tabindex大于等于0的元素都可以获得焦点。两种焦点元素都可以使用系统焦点显示，会识别焦点显示样式的平台改变。
+4)开发者提供一种高度可见的焦点提示；
+在该技巧中，可以使用鼠标、tab键、箭头键、快捷键、或其他的方法让用户将焦点放置在一个元素上，使用高对比度的颜色、粗线、或者其他的视觉提示，比如闪烁；
+样例1：链接
+网页有深背景颜色和比较亮的文本和链接。当焦点在链接上时，链接外有一个亮的黄色的线。
+样例2:表单元素
+网页里包含表格内的表单。表格和表单的边框都很细、黑色的线。当焦点位置表单元素时，元素外有半透明的红色线；
+样例3：菜单
+网页中的交互菜单包含子菜单。用户可以使用上下光标来移动焦点。因为焦点移动，当前焦点菜单条目改变背景颜色，与周围条目有一个3:1的对比度，与文字的对比度为4.5:1。
+5)使用脚本来改变焦点元素的背景颜色或者边框；
+样例1：本例中，当链接接收到焦点时，其背景变为黄色；
+inherit是继承父类的属性，一般用于字体、颜色、背景等；
+此处有省略...
+<script>
+ function toggleFocus(el)
+ {
+  el.style.backgroundColor =  el.style.backgroundColor=="yellow" ? "inherit" : "yellow";
+ }
+</script>
+此处有省略...
+<a href="example.html" onfocus="toggleFocus(this)" onblur="toggleFocus(this)">焦点</a>
+此处有省略...
+九、用户在浏览一系列网页时，当前网页的位置信息应该可以获得。
+面包屑（breadcrumb trail ）：使用">", "|", "/", "::"在面包屑中分开条目：
+样例1：主页::开发中心::怎样加入，当前页面“怎样创建超链接”是不在面包屑中的；
+样例2：主页/画廊/南极洲/企鹅/巴布亚企鹅:除了最后一个巴布亚企鹅，其他都是个链接，巴布亚企鹅包含在面包屑中，却不是个链接；
+网站地图（map site）:可以提供整个网站的总览，帮助用户了解网站包含的内容和内容是怎样组织的；提供了一个不同于复杂导航条的导航方式。网站地图应该做到提供所有网站所有部分的链接，地图呈现出来的组织方式应该和网站的组织方式相同，不包含无效链接；
+样例1：WAI的网站提供一个WAI的网站地图，列出了网站的不同部分，展示了网站的不同部分及其内部结构；
+样例2：在线杂志会列出杂志的所有章节和其下所有子章节。包含帮助、联系我们、版权政策、雇佣机会、投稿、主页等等链接。
+使用导航条来指明当前位置：可以使用添加个图标或者文本，或者改变条目的状态。
+样例1：导航栏的当前页面栏目，颜色发生改变；
+样例2：在一个网页中设计两个框架（frame），一个用来装目录，一个用来装内容；
+样例3：焦点或鼠标划过的时候，有背景颜色的改变。
+十、章节开始前为章节提供标题元素：表明主要内容的开始，在主内容区域标记章节标题，来区分不同的导航，标记作为标题的图片，允许用户在页面内跳转。
+十一、标题和标签: 标题和标签说明主题或目的。
+heading：描述性标题可以区分与网页整体有关的章节内容，和网页内其他章节的内容。作者需要把重要内容放在标题开头。
+样例1：一个网页描述了灾难的准备措施，应该使用以下的标题：
+<h1>灾难准备</h1>
+<h2>水灾准备</h2>
+<h2>火灾准备</h2>
+2级标题的开头应该有所区分，如水灾准备和火灾准备，而不是准备水灾和准备火灾；
+样例2：一篇介绍一个城镇历史的文章，包括城镇的建议和扩张，然后是怎样达到现在的状态。这个网页标题就应该为我们城镇的历史。第一章节应该是城镇的建立，第二章节应该是城镇的扩张，第三label：章节应该我们城镇的今天，而且第三章节应该包括城镇的人民、城镇的组织、城镇的建筑；
+描述性标签：使网页内容中的交互元素的目的更清晰，使用适当的技巧将标签和交互控件联系在一起，允许辅助技术识别标签，并将它们呈现给用户。标签还应该被用来包括文本或文本样例，来说明需要的输入；
+样例1：在线地图的放大和缩小按钮，应该有放大（Ctrl + Shift + L），缩小（Ctrl + Shift + R），方便键盘使用者操作；
+样例2：姓和名分开输入的表达，姓和名的输入框应该给出明确的label；
+样例3：表单中的必填部分，label中应该有必填字样；
+十二、创建一种机制跳过一堆界面相同的部分，直接到达主内容
+1、在网页第一交互条目就是添加一个链接到主内容的开始。
+样例1：在线报纸网页，第一个tab就是跳到主要故事；
+样例2：第一个链接为跳到主要内容；
+2、提供一种机制从网页模块开头跳转到模块尾部，当有许多模块需要跳转的时候，用户使用这种机制跳转；
+样例1：跳过导航链接，网页第一个链接的title为（跳过导航区域）；
+样例2：书目导航，在目录前边有术语解释或者其他内容，这个区域的第一个链接应该是：跳过给区域到目录；
+样例3：一个网站的所有网页包含网站地图的链接、杂志信息、怎样联系机构。所有的链接都包含子链接，第一个模块的第一个链接的title应为跳过导航链接，第二个模块的title应为跳过章节链接，跳过所有子链接。
+3、在网页顶端添加网页各内容的链接：
+样例1：在所有网页开始都有三个链接：跳转到主页、搜索区域、导航条。
+4、使用ARIA路标（landmark）来区分网页中的区域
+网页内的某一区域作为导航路标。辅助技术应该允许用户快速导航到该区域，主流的用户代理允许用户快速的导航到路标区域。注：路标是网页集的规则简介。开发者不建议在内容中使用该角色。
+landmark是网页上用户想快速浏览的某一区域，这个区域的内容与其他区域的用户目的不同，比如导航、搜索、查看详细内容做作用。
+路标通过添加role属性来标记区域。role属性的值就是路标的名字，值有：banner（旗帜）、complemenary（附加）、contentinfo（引用）、form（表单）、navigation（导航）、search（搜索）、application（应用）。最好landmark中包含网页中的所有内容，读屏使用者不会丢失内容。
+landmark上一级role是region（区域），下一级role有application（应用）、banner（旗帜）、complementary（补充）、contentinfo、form（表单）、main（主题）、navigation（导航）、search（搜索）；
+样例1：简单路标
+<div id="header" role="banner">旗帜图片和介绍性标题</div>
+<div id="sitelookup" role="search">搜索区域</div>
+<div id="nav" role="navigation">这有一群链接  </div>
+<div id="content" role="main">  渥太华是加拿大的首都</div>
+<div id="rightsideadvert" role="complementary">.这有一个广告</div>
+<div id="footer" role="contentinfo">(c)自由公司、123自由路、美国T</div>
+样例2：如果使用多次同一role值的路标，应该依靠aria-labelledby属性来区分，aria-labelledby属性值是子元素的id值；
+<div id="leftnav" role="navigaton" aria-labelledby="leftnavheading">
+<h2 id="leftnavheading">系统链接</h2>
+<ul><li>一堆链接这里有</li> </ul></div>
+<div id="rightnav" role="navigation" aria-labelledby="rightnavheading">
+<h2 id="rightnavheading">有关的题目</h2>
+<ul><li>一堆链接这里有</li></ul></div>
+样例3：同一role值的路标，没有可以区分的文本，使用aria-label来区分；
+<div id="leftnav" role="navigaton" aria-label="Primary">
+<ul><li>一堆链接这里有 </li></ul> </div>
+<div id="rightnav" role="navigation" aria-label="Secondary">
+<ul><li>一堆链接这里有 </li> </ul></div>
+样例4：搜索表单
+<form role="search">
+<label for="s6">搜索</label><input id="s6" type="text" size="20">
+</form> 
+5.在每一个章节内容前提供标题元素：要求上下级标题有继承和逻辑关系；
+
+样例1：通过使用h2标签组织章节；
+关键代码：
+<h1>搜索技术周刊</h1>
+<h2>搜索</h2>
+全部代码：
+<h1>搜索技术周刊</h1>
+ <h2>搜索</h2>
+ <form action="search.php">
+  <p><label for="searchInput">输入搜索主题：</label>
+  <input type="text" size="30" id="searchInput">
+  <input type="submit" value="Go"></p>
+ </form>
+ <h2>可获得的周刊</h2>
+ <div class="jlinks">
+  <a href="pcoder.com">准也程序员</a> |
+  <a href="algo.com">算法</a> |
+  <a href="jse.com">软件工程期刊</a>
+ </div>
+ <h2>搜索期刊</h2>
+  搜索到的期刊    
+样例2：使用标题展示网页内容的组织；
+<!-- Logo, 旗帜广告, 搜索表单, 等等.  -->
+  <h2>导航</h2>
+    <ul>
+      <li><a href="about.htm">关于我们</a></li>
+      <li><a href="contact.htm">联系我们</a></li>
+       
+    </ul>
+  <h2>所有的标题</h2>
+   <!-- 文字, 图片,网页中的其他内容 --> 
+样例3：标题可以展示出主要内容材料的组织方式
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>烹饪技巧</title>  
+  </head>   
+  <body>     
+    <h1>烹饪技巧</h1>     
+    <p>       
+       这里有些文本      
+    </p>           
+    <h2>油炸食品</h2> 
+    <p> 
+         这里有些文本      
+    </p>           
+    <h2>奶油食品</h2>       
+    <p>
+         这里有些文本      
+    </p>   
+  </body> 
+</html>
+注：H标签的优化用法
+1）如果在一个页面中定义很多H1标签，搞得用户和搜索引擎不知道你这个页面到底要说明什么内容，是会被搜索引擎惩罚的。所以应用H1要谨慎，要从服务用户的角度去出发，真正的在页面中合理使用H1标签。
+2）在主页，<H1>标签当仁不让的用来定义“站点名称”。<H2>标签用来定义“站点副标题”。如果没有副标题，<H2>标签最好也空着，以备不时之需。<H3>标签用来定义栏目名称，<H4>标签用来定义文章标题，但大多数内容系统，文章列表输出用<UL>标签，所以<H4>可能就派不上用场，这里只是以此类推。
+3）目录页(栏目页)和主页类似，<H>系列标签同主页定义。
+4）文章内容页，<H1>标签给文章的主标题；以利于提高文章在搜索引擎中的权重。
+5）整个网站(一般指首页如何对H标签定义)关键词设置时本着，重点中的重点用h1标签(网站的核心关键词)，相对重点用h2标签(网站的各个频道级重要的长尾关键词)，再往下用h3标签(一般指类表页或者最终页的标题)…….依次类推，不过一般网页不会超过h3标签的定义!
+6.使用框架元素来代替网页中的重复部分
+<frameset cols="20%, *">
+  <frame src="navigation.html" name="navbar" title="导航栏" />
+  <frame src="main.html" name="maincontent" title="主要新闻内容" />
+  <noframes>
+    <p><a href="noframe.html">无框架部分</a>.</p>
+  </noframes>
+</frameset>     
+横向框架是： <frameset cols=#>
+比如说有两列，左边一个，右边一个。
+纵向框架是： <frameset rows=#>
+比如说有两行，上边一个，下边一个。
+cols是说有几列，rows是说有几行  
+样例1：使用title属性来描述带有导航条和文件的框架；
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>一个简单的框架文件</title>
+  </head>
+  <frameset cols="10%, 90%">
+    <frame src="nav.html" title="主菜单" />
+    <frame src="doc.html" title="文件" />
+    <noframes>
+      <body>
+        <a href="lib.html" title="图书馆链接">选择去图书馆</a>
+      </body>
+    </noframes>
+  </frameset>
+</html> 
+样例2：使用iframe的title属性来描述框架的内容；
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>使用iframe的文件</title>
+  </head>
+
+<iframe src="banner-ad.html" id="testiframe" 
+  name="testiframe" title="广告">
+    <a href="banner-ad.html">广告</a>
+</iframe>
+</html>  
+7.使用展开和折叠菜单绕过内容块：使用可展开折叠菜单来跳过重复的内容；
+样例1：使用html、css、JS脚本在网页顶部添加一个折叠菜单：
+
+  <script type="text/javascript">
+  function toggle(id){
+    var n = document.getElementById(id);//获得固定id值的元素，赋给n；
+    n.style.display =  (n.style.display != 'none' ? 'none' : '' );
+  }//将控件n的display属性设置为none，不可用；
+  </script>
+
+  <a href="#" onclick="toggle('navbar')">切换导航栏</a>
+  <ul id="navbar">
+  <li><a href="http://target1.html">链接 1</a></li>
+  <li><a href="http://target2.html">链接  2</a></li>
+  <li><a href="http://target3.html">链接  3</a></li>
+  <li><a href="http://target4.html">链接  4</a></li>
+  </ul>
+样例2：内容列表在每个网页都有出现，在列表前加一个按钮来移除和添加按钮；
+   <script type="text/javascript">
+  function toggle(id){
+    var n = document.getElementById(id);
+    n.style.display =  (n.style.display != 'none' ? 'none' : '' );
+  }
+  </script>
+  
+  <button onclick="return toggle('toc');">内容切换表</button>
+  <div id="toc">
+  </div>
+十三.为链接提供目的文本
+1）为链接提供目的描述文本：
+<a href="routes.html"> 在巨石攀登健身房目前航线 </a>
+2）图片链接，图片无意义，可以使用img控件的alt属性来描述链接目的：
+<a href="routes.html"> <img src="topo.gif" alt="在巨石攀登健身房目前航线" /> </a> 
+3）图片和文字链接，图片无意义：
+<a href="routes.html">  
+<img src="topo.gif" alt="" /> 在巨石攀登健身房目前航线
+</a>
+4）图片和文字链接，图片有意义：
+<a href="prod_123_feedback.htm">反馈 
+<img src="response.gif" width="15" height="15" alt="收到响应图标" />
+</a>
+5）链接到文件（pdf、doc、xls）：
+<p><a href=”2009mycorp_report.pdf”>MyCorp 2009 年度报告pdf)</a><br /><a href=”2009mycorp_budget.xls”>MyCorp 2009 年度财务 (Excel)</a></p>
+6）使用title属性添加链接文本：
+title用来澄清链接目的：
+<a href="index.html" title="了解更多关于大象的失败疏散">疏散垮下巨型负荷
+</a>
+Title用来描述新窗口打开方式：
+<a href="http://example.com/subscribe.html" target="_blank"  title="在新窗口中打开">  新闻订阅邮箱验证
+</a>
+7）列表类链接：添加描述文本描述链接目的：
+关键代码：<a href="tomb_raider.htm">古墓丽影：传奇</a>
+全部代码：
+<ul>
+<li>
+<a href="tomb_raider.htm">古墓丽影：传奇</a>
+<a href="tomb_raider_images.htm">看图片</a>
+<a href="tomb_raider.mpeg">下载demo</a>
+</li>
+<li>
+<a href="fear_extraction.htm">F.E.A.R.撤离点</a>
+<a href="fear_extraction_images.htm">看图片</a>
+<a href="fear_extraction.mpeg">下载demo</a>
+</li>
+<li>
+<a href="call_of_duty.htm">使命召唤 2</a>
+<a href="call_of_duty_images.htm">See 看图片</a>
+<a href="call_of_duty.mpeg">下载demo</a>
+</li>
+<li>
+<a href="Warhammer 40K.htm">战锤40K</a>
+<a href="warhammer_40k_images.htm">看图片</a>
+<a href="Warhammer_40k.mpeg">下载demo</a>
+</li>
+</ul>   
+8）使用链接文本为链接添加目的描述：
+<h3>The final 15</h3>
+<p>即将在您附近的小镇在全国民俗节阵容的最后。<a href="final15.html">[更多]</a></p>
+<h3>Folk artists get awards</h3>
+<p>从即将到来的全国民俗节表演者收到国家文物奖学金。<a href="nheritage.html">[更多]</a></p>
+更多链接加title信息，会描述的更清楚；
+9）在表格内，使用链接文本为链接说明链接目的：
+<tr>
+<th scope="row">经济车</th>
+<td>
+<a href="econ_ala.htm">$67/天</a>
+</td>
+<td><a href="econ_bud.htm">$68/天</a></td>
+<td><a href="econ_nat.htm">$72/天</a></td>
+<td><a href="econ_av.htm">$74/天</a></td>
+<td><a href="econ_hz.htm">$74/天</a></td>
+</tr>
+10）链接文本为父级内容添加链接目的：
+<li>年度报告2005-2006
+<ul>
+<li>
+<a href="annrep0506.html">(HTML)</a>//年度报告2005-2006的html链接
+</li>
+<li>
+<a href="annrep0506.pdf">(PDF)</a>//年度报告2005-2006的pdf链接
+</li>
+<li>
+<a href="annrep0506.rtf">(RTF)</a>//年度报告2005-2006的rtf链接
+</li>
+</ul>
+</li>
